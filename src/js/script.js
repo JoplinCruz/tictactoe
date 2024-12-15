@@ -35,7 +35,7 @@ class MachineNormalPlayer extends Player {
 
     getMove(game) {
         let player = this.letter,
-            nextPlayer = player == "X" ? "O" : "X";
+            nextPlayer = player === "X" ? "O" : "X";
         let attack = this.strategy(game, player),
             defense = this.strategy(game, nextPlayer);
 
@@ -55,7 +55,7 @@ class MachineNormalPlayer extends Player {
         for (let rule of rules) {
             var checked = [];
             for (let index of rule) {
-                let minmax = game.board[index] == player ? 1 : game.board[index] == " " ? 0 : -1;
+                let minmax = game.board[index] === player ? 1 : game.board[index] === " " ? 0 : -1;
                 checked.push(minmax);
             }
             board.push(checked);
@@ -90,12 +90,12 @@ class MachineExpertPlayer extends Player {
 
     minmax(game, player) {
         var maxPlayer = this.letter;
-        var nextPlayer = player == "X" ? "O" : "X";
+        var nextPlayer = player === "X" ? "O" : "X";
 
-        if (game.winner == nextPlayer) {
+        if (game.winner === nextPlayer) {
             return {
                 mark: NaN,
-                score: nextPlayer == maxPlayer ? 1 * (game.numberEmptyMarks() + 1) : -1 * (game.numberEmptyMarks() + 1)
+                score: nextPlayer === maxPlayer ? 1 * (game.numberEmptyMarks() + 1) : -1 * (game.numberEmptyMarks() + 1)
             };
         } else if (!game.existEmptyMarks()) {
             return { mark: NaN, score: 0 };
@@ -103,7 +103,7 @@ class MachineExpertPlayer extends Player {
 
         var bestScore = {
             mark: NaN,
-            score: player == maxPlayer ? -Infinity : Infinity
+            score: player === maxPlayer ? -Infinity : Infinity
         }
 
         for (let possible of game.availableMoves()) {
@@ -113,7 +113,7 @@ class MachineExpertPlayer extends Player {
             game.winner = NaN;
             score.mark = possible;
 
-            if (player == maxPlayer) {
+            if (player === maxPlayer) {
                 bestScore = score.score > bestScore.score ? score : bestScore;
             } else {
                 bestScore = score.score < bestScore.score ? score : bestScore;
@@ -138,7 +138,7 @@ class TicTacToe {
     availableMoves() {
         let moves = [];
         this.board.forEach((letter, index) => {
-            if (letter == " ") {
+            if (letter === " ") {
                 moves.push(index);
             }
         });
@@ -146,7 +146,7 @@ class TicTacToe {
     }
 
     numberEmptyMarks() {
-        return this.board.filter(empty => empty == " ").length;
+        return this.board.filter(empty => empty === " ").length;
     }
 
     existEmptyMarks() {
@@ -154,7 +154,7 @@ class TicTacToe {
     }
 
     makeMove(player, ref) {
-        if (this.board[ref] == " ") {
+        if (this.board[ref] === " ") {
             this.board[ref] = player;
             if (this.checkWinner(player)) {
                 this.winner = player
@@ -168,9 +168,9 @@ class TicTacToe {
 
         for (let index = 0; index < 8; index++) {
             let rule = this.rules[index];
-            if (this.board[rule[0]] != " " &&
-                this.board[rule[0]] == this.board[rule[1]] &&
-                this.board[rule[1]] == this.board[rule[2]]) {
+            if (this.board[rule[0]] === player &&
+			 this.board[rule[0]] === this.board[rule[1]] &&
+                this.board[rule[1]] === this.board[rule[2]]) {
 
                 return true;
             }
@@ -364,14 +364,14 @@ class Game {
                 }
             }
 
-            if (this.player == this.humanPlayer.letter && !this.gameover && !this.delay) {
+            if (this.player === this.humanPlayer.letter && !this.gameover && !this.delay) {
 
                 if (!this.running) {
                     this.player = this.machinePlayer.letter;
                     this.delay = 1 * this.fps;
                 }
 
-            } else if (this.player == this.machinePlayer.letter && this.game.existEmptyMarks() && !this.game.winner && !this.gameover && !this.delay) {
+            } else if (this.player === this.machinePlayer.letter && this.game.existEmptyMarks() && !this.game.winner && !this.gameover && !this.delay) {
 
                 let index = this.machinePlayer.getMove(this.game);
 
